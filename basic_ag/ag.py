@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from random import random, randint
+import ag_aux
 
 # number of bits of individual representation
 INDIVIDUAL_LENGTH = 22
@@ -14,43 +15,38 @@ MUTATION_RATE = 1
 CROSSOVER_RATE = 60
 
 # population size
-POP_SIZE = 4
+POP_SIZE = 10
+
+# Number of generations
+GENERATION_NUMBER = 1
 
 def generate_individual():
-	return ''.join(str(randint(0,1)) for i  in range(INDIVIDUAL_LENGTH))
+    return ''.join(str(randint(0,1)) for i  in range(INDIVIDUAL_LENGTH))
+
+def generate_pop():
+    return [generate_individual() for i in range(POP_SIZE)] 
 
 def individual_value(individual):
-	return LOW_BOUND + (((HIGH_BOUND - LOW_BOUND) * int(individual, 2)) / ((2 ** INDIVIDUAL_LENGTH) - 1.0))
+    return LOW_BOUND + (((HIGH_BOUND - LOW_BOUND) * int(individual, 2)) / ((2 ** INDIVIDUAL_LENGTH) - 1.0))
 	
-# objective func == f(x) = x^2 - 3x + 4
-# fitness function (minimization problem) == fa(x) = -f(x))
-def objective_func(individual):
-	x = individual_value(individual)
-	return (x ** 2) - (3 * x) + 4
-
-def fitness(individual):
-	return -objective_func(individual)
-
-
 def random_percent():
-	return random() * 100
+    return random() * 100
 
-def crossover():
-	pass
+def crossover(individual1, individual2):
+    if random_percent() < CROSSOVER_RATE:
+        pass
 
 def mutation(individual):
-	out = ''
-	for cromossomo in individual:
-		p = random_percent()
-		if p < 1.0:
-			if cromossomo == '0': out += '<1>'
-			else: out += '<0>'
-		else: out += cromossomo
-	print out
-	
+    for i in range(len(individual)):
+        if random_percent() < MUTATION_RATE:
+            if individual[i] == '0':
+                individual[i] = '1'
+            else:
+                individual[i] = '1'
 
-
-if '__name__' == '__main__':
+def main():
+    pass
+    
+if __name__ == '__main__':
 	main()
-
 
