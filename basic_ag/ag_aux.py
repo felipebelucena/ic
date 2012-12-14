@@ -4,10 +4,9 @@
 
 # objective func == f(x) = x^2 - 3x + 4
 # fitness function (minimization problem) == fa(x) = -f(x))
-def objective_func(individual):
-        x = individual_value(individual)
+def objective_func(x):
         return (x ** 2) - (3 * x) + 4
 
-def fitness(individual):
-        return -objective_func(individual)
+def fitness(x):
+        return -objective_func(x)
 

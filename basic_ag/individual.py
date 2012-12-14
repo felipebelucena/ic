@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from random import random, randint
+import ag_aux
 
 class Individual(object):
 
@@ -19,11 +20,22 @@ class Individual(object):
     def generate_pop(pop_size, individual_length):
         return [Individual.generate_individual(individual_length) for i in range(pop_size)]
 
+    def individual_value(self):
+        return self.low_bound + (((self.high_bound - self.low_bound) * int(self.individual, 2)) /
+        ((2 ** self.individual_length) - 1.0))
+
+    def fitness(self):
+        return ag_aux.fitness(self.individual_value())
+
+
 
 # just some tests...
 def main():
-    i = Individual(10, 4, 5)
+    i = Individual(22, -10, 10)
     print i.individual_length, " ", i.low_bound, " ", i.high_bound
+
+    i.individual = "0111001111111010001000"
+    print "i: {0} | fitness: {1}".format(i.individual, i.fitness())
 
     j = Individual.generate_pop(5, 10)
     print j
