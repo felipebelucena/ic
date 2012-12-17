@@ -16,18 +16,18 @@ class Individual(object):
         self.chromosome = Individual.generate_individual(individual_length)
 
     def __str__(self):
-        return "Chromosome: " + self.chromosome
+        return "Chromosome: {0}\tValue: {1}\tFitness: {2}".format(self.chromosome,  self.individual_value(), self.fitness())
 
     @staticmethod
     def generate_individual(individual_length):
         return ''.join(str(randint(0,1)) for i  in range(individual_length))
     
     @staticmethod
-    def generate_pop(pop_size, individual_length):
-        return [Individual.generate_individual(individual_length) for i in range(pop_size)]
+    def generate_pop(pop_size, il, lb, hb, mr):
+        return [Individual(il, lb, hb, mr) for i in range(pop_size)]
 
     def individual_value(self):
-        return self.low_bound + (((self.high_bound - self.low_bound) * int(self.individual, 2)) /
+        return self.low_bound + (((self.high_bound - self.low_bound) * int(self.chromosome, 2)) /
         ((2 ** self.individual_length) - 1.0))
 
     def fitness(self):
@@ -40,7 +40,6 @@ class Individual(object):
 
         if random_percent() < crossover_rate:
             cut_point = randint(0,ind1.individual_length)
-            print "Crossover: cut_point: ", cut_point
             ind1_tmp = ind1.chromosome
             ind2_tmp = ind2.chromosome
             ind1.chromosome = ind1_tmp[0:cut_point] + ind2_tmp[cut_point:]
@@ -50,7 +49,6 @@ class Individual(object):
         for i in range(len(self.chromosome)):       
             if random_percent() < self.mutation_rate:
                 _list = list(self.chromosome)
-                print "mutation: i: ", i
                 if _list[i] == '0':
                     _list[i] = '1'
                 else:
