@@ -3,14 +3,20 @@
 from random import random, randint
 import ag_aux
 
+def random_percent():
+    return random() * 100
+
 class Individual(object):
 
-    def __init__(self, individual_length, low_bound, high_bound):
+    def __init__(self, individual_length, low_bound, high_bound, mutation_rate):
         self.individual_length = individual_length
         self.low_bound = low_bound
         self.high_bound = high_bound
-        self.individual = Individual.generate_individual(individual_length)
+        self.mutation_rate = mutation_rate
+        self.chromosome = Individual.generate_individual(individual_length)
 
+    def __str__(self):
+        return "Chromosome: " + self.chromosome
 
     @staticmethod
     def generate_individual(individual_length):
@@ -27,18 +33,33 @@ class Individual(object):
     def fitness(self):
         return ag_aux.fitness(self.individual_value())
 
+    @staticmethod
+    def crossover(ind1, ind2, crossover_rate):
+        if ind1.individual_length != ind2.individual_length:
+            raise Exception("Crossover error: individuals have not equal chromosome length")
+
+        if random_percent() < crossover_rate:
+            cut_point = randint(0,ind1.individual_length)
+            print "Crossover: cut_point: ", cut_point
+            ind1_tmp = ind1.chromosome
+            ind2_tmp = ind2.chromosome
+            ind1.chromosome = ind1_tmp[0:cut_point] + ind2_tmp[cut_point:]
+            ind2.chromosome = ind2_tmp[0:cut_point] + ind1_tmp[cut_point:]          
+            
+    def mutation(self):
+        for i in range(len(self.chromosome)):       
+            if random_percent() < self.mutation_rate:
+                _list = list(self.chromosome)
+                print "mutation: i: ", i
+                if _list[i] == '0':
+                    _list[i] = '1'
+                else:
+                    _list[i] = '0'
+                self.chromosome = "".join(_list)
 
 
-# just some tests...
 def main():
-    i = Individual(22, -10, 10)
-    print i.individual_length, " ", i.low_bound, " ", i.high_bound
-
-    i.individual = "0111001111111010001000"
-    print "i: {0} | fitness: {1}".format(i.individual, i.fitness())
-
-    j = Individual.generate_pop(5, 10)
-    print j
+    pass
 
 if __name__ == '__main__':
     main()
